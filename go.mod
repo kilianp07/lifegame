@@ -1,6 +1,6 @@
 module github.com/kilianp07/lifegame
 
-go 1.21.6
+go 1.21
 
 require (
 	github.com/c-bata/go-prompt v0.2.6
