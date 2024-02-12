@@ -3,7 +3,7 @@ GO := go
 GOFLAGS :=
 RUNARGS := --conf ./tests/conf.json
 GOTEST := $(GO) test
-BINARY_NAME := lifegame
+BINARY_NAME := gamelife
 BUILD_DIR := ./build
 SRC_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -12,6 +13,7 @@ func TestNewController(t *testing.T) {
 	var (
 		err        error
 		controller = &Controller{}
+		path       string
 	)
 
 	// Test with invalid path
@@ -23,9 +25,13 @@ func TestNewController(t *testing.T) {
 		t.Errorf("Expected error, got nil")
 	}
 
+	path, err = os.Getwd()
+	if err != nil {
+		t.Errorf("Unable to get current path: %v", err)
+	}
 	// Test with valid path
 	conf = config.DBConf{
-		DBPath: "../tests/test.db",
+		DBPath: fmt.Sprintf("%s/test.db", path),
 	}
 
 	// Delete created database at the end of the test

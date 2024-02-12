@@ -22,3 +22,11 @@ go.work
 
 
 tests/
+
+.vscode
+
+build
+
+.DS_Store
+
+vendor/
