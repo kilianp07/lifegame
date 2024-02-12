@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/c-bata/go-prompt"
+	"github.com/kilianp07/lifegame/app/game"
 	"github.com/kilianp07/lifegame/app/register"
 	"github.com/kilianp07/lifegame/config"
 	"github.com/kilianp07/lifegame/database"
@@ -88,7 +89,7 @@ func (a *App) determineFunc(s string) error {
 	case REGISTER:
 		return register.Start(a.controller)
 	case PLAY:
-		fmt.Println("play")
+		game.Run(a.conf.Game)
 	case RULES:
 		fmt.Println("rules")
 	case EXIT:
