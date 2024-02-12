@@ -2,10 +2,14 @@ package app
 
 import (
 	"fmt"
+	"log"
+	"os/exec"
+	"runtime"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/kilianp07/lifegame/app/game"
 	"github.com/kilianp07/lifegame/app/register"
+	"github.com/kilianp07/lifegame/chat/server"
 	"github.com/kilianp07/lifegame/config"
 	"github.com/kilianp07/lifegame/database"
 )
@@ -14,6 +18,7 @@ const (
 	REGISTER = "register"
 	PLAY     = "play"
 	RULES    = "rules"
+	CHAT     = "chat"
 	EXIT     = "exit"
 )
 
@@ -63,7 +68,7 @@ func (a *App) configure() error {
 	if err != nil {
 		return err
 	}
-
+	go server.Run()
 	return a.controller.Init()
 }
 
@@ -77,6 +82,7 @@ func (a *App) completer(d prompt.Document) []prompt.Suggest {
 		{Text: REGISTER, Description: "Create a new user account"},
 		{Text: PLAY, Description: "Play the game"},
 		{Text: RULES, Description: "Read rules"},
+		{Text: CHAT, Description: "Open a chatbox"},
 		{Text: EXIT, Description: "Exit the game"},
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
@@ -92,10 +98,33 @@ func (a *App) determineFunc(s string) error {
 		game.Run(a.conf.Game)
 	case RULES:
 		fmt.Println("rules")
+	case CHAT:
+		a.openChat()
 	case EXIT:
 		break
 	default:
 		fmt.Println("unknown command")
 	}
 	return nil
+}
+
+func (a *App) openChat() {
+	var (
+		err error
+		url = "http://:8080"
+	)
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
